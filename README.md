@@ -84,8 +84,6 @@ cd forg
 sh install.sh
 ```
 
-Tip: Set an alias for `forg.sh`
-
 ## Notes
 
 This script has been only tested in a Linux Machine.
