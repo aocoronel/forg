@@ -2,9 +2,8 @@
 
 src_directory="$1"
 output_directory="$2"
-config_ext="$HOME/.local/share/organizer-extensions.conf"  # Sources filenames and extensions
-config_dir="$HOME/.local/share/organizer-directories.conf" # Sources directories
-logs="$HOME/.cache/organizer.logs"
+config="$HOME/.local/share/forg.conf" # Sources filenames and extensions
+logs="$HOME/.cache/forg.logs"
 KILLDUPLICATE=false
 DRYMODE=false
 
@@ -22,23 +21,16 @@ Available Options:
 EOF
 }
 
-function directory_check() {
-  # directories is sourced from config_dir
-  for dest_dir in "${directories[@]}"; do
-    [[ -d "$dest_dir" ]] || mkdir -p "$output_directory/$dest_dir"
-  done
-}
-
 move() {
   find "$src_directory" -type f -print0 | while IFS= read -r -d $'\0' file; do
     filename=$(basename "$file")
-    file_tag="${filename%-*}"
+    file_tag="${filename%%\%*}"
     extension="${filename##*.}"
     destination_subpath=""
 
     case "$method" in
     ftp)
-      destination_subpath="${extension_map[$extension]}"
+      destination_subpath="${ftp[$extension]}"
       ;;
     *)
       map="${method}"
@@ -51,6 +43,10 @@ move() {
       destination_dir="$output_directory/$destination_subpath"
     else
       destination_dir="$output_directory/others"
+    fi
+
+    if [ ! -d "$destination_dir" ]; then
+      mkdir -p "$destination_dir"
     fi
 
     # Check if the file already exists in the destination
@@ -126,14 +122,12 @@ if [ "$src_directory" == "$output_directory" ]; then
 fi
 
 # Check for config files and source them
-if [[ ! -f "$config_ext" ]] || [[ ! -f "$config_dir" ]]; then
-  echo "Error: extensions.conf or directories.conf not found.  Exiting." >&2
+if [[ ! -f "$config" ]]; then
+  echo "Error: forg.conf not found.  Exiting." >&2
   exit 1
 else
   # shellcheck disable=SC1090
-  source "$config_ext"
-  # shellcheck disable=SC1090
-  source "$config_dir"
+  source "$config"
   val=$?
   if [ "$val" -ne 0 ]; then
     echo "Failed to source configuration files"
@@ -141,5 +135,4 @@ else
   fi
 fi
 
-directory_check
 main
