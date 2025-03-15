@@ -14,9 +14,9 @@ function help() {
 File Organizer
 Usage: $0 [source-directory] [dest-directory] [options]
 Available Options:
-- dry                - Give a preview of the command
-- rmdup              - Remove duplicate files
-- help               - Display this message and exits
+- -d, --dry                - Give a preview of the command
+- -r, --rm                 - Remove duplicate files
+- -h, --help               - Display this message and exits
 EOF
 }
 
@@ -89,13 +89,13 @@ function main() {
 
 # Check for optional arguments
 case "$3" in
-dry)
+-d | --dry)
   DRYMODE=true
   ;;
-rmdup)
+-r | --rm)
   KILLDUPLICATE=true
   ;;
-help)
+-h | --help)
   help
   exit 0
   ;;

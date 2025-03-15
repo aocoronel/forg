@@ -21,19 +21,19 @@ It's a CLI tool that tries to make the process of organizing your files much eas
 ```
 Usage: $0 [source-directory] [dest-directory] [options] [method]
 Available Options:
-- dry                - Give a preview of the command
-- rmdup              - Remove duplicate files
-- help               - Display this message and exits
+- -d, --dry                - Give a preview of the command
+- -r, --rm                 - Remove duplicate files
+- -h, --help               - Display this message and exits
 ```
 
-Note: `dry` and `rmdup` can't be used together
+Note: `-d` and `-r` can't be used together
 
 ### Examples
 
 - Example 1
 
 ```bash
-forg.sh /home/user/Downloads /home/user/Files rmdup ftp
+forg.sh /home/user/Downloads /home/user/Files -r ftp
 ```
 
 This will move all files from Downloads/ to Files/, organize them by filetype and remove any duplicates from the Downloads/ directory.
@@ -41,7 +41,7 @@ This will move all files from Downloads/ to Files/, organize them by filetype an
 - Example 2
 
 ```bash
-forg.sh /home/user/Downloads /home/user/Files dry gallery
+forg.sh /home/user/Downloads /home/user/Files -d gallery
 ```
 
 This will preview move for all files from Downloads/ to Files/ and organize them by the gallery rules.
