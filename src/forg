@@ -26,7 +26,7 @@ readonly config
 function help() {
   cat <<EOF
 File Organizer
-Usage: $0 [options] <method> <source-directory> <dest-directory>
+Usage: $0 [options] <source-directory> <dest-directory> <method> ...
 Options:
   -d, --dry       Preview actions
   -r, --rm        Remove duplicate files
