@@ -1,4 +1,4 @@
-# FORG: A File Organizer
+<h1 align="center">Forg</h1>
 
 `forg.sh` is a file organizer written in shell, that allows to organize and move files based on filetype or any other rule, such as naming conventions.
 
@@ -48,7 +48,7 @@ This will preview move for all files from Downloads/ to Files/ and organize them
 
 ## Configuration
 
-This script reads the `forg.conf` which contains arrays, as follows:
+This script reads the `forg.conf` which contains arrays. There is a big array called `ftp` and two extra arrays to serve as a template. One of them looks like this:
 
 ```shell
 declare -A gallery=(
@@ -62,11 +62,11 @@ declare -A gallery=(
 )
 ```
 
-When the method 'gallery' is used, all files that start with any of those patterns are moved to the corresponding directory.
+When the method `gallery` is used, all files that start with any of those patterns are moved to the corresponding directory.
 
-By default, only 'ftp' reads the end of the files, looking for filetypes. All the other arrays will have their pattern to the beginning of the filename, for example: wppr%-cat.png. The **percentage symbol** declares the end of the pattern, in this case 'wppr'.
+By default, only `ftp` reads the end of the files, looking for filetypes. All the other arrays will have their pattern to the beginning of the filename, for example: `wppr%-cat.png`. The **percentage symbol** declares the end of the pattern, in this case `wppr`.
 
-There is no hardcode in the script, so the array could be called anything and infinitely modifiable. The '%' symbol can be changed to something else, by changing this line in the code:
+There is no hardcode in the script, so the array could be called anything and infinitely modifiable. The `%` symbol can be changed to something else, by changing this line in the code:
 
 ```bash
 file_tag="${filename%%\%*}"
