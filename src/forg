@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 
-src_directory="$1"
-output_directory="$2"
 config="$HOME/.local/share/forg.conf" # Sources filenames and extensions
 logs="$HOME/.cache/forg.logs"
-KILLDUPLICATE=false
+
 DRYMODE=false
+KILLDUPLICATE=false
+method=""
+src_directory=""
+output_directory=""
 
 readonly config
 
 function help() {
   cat <<EOF
 File Organizer
-Usage: $0 [source-directory] [dest-directory] [options] [method]
-Available Options:
--d, --dry                - Give a preview of the command
--r, --rm                 - Remove duplicate files
--h, --help               - Display this message and exits
+Usage: $0 [options] <method> <source-directory> <dest-directory>
+Options:
+  -d, --dry       Preview actions
+  -r, --rm        Remove duplicate files
+  -h, --help      Show this message
 EOF
 }
 
@@ -74,36 +76,46 @@ move() {
 }
 
 function main() {
-  echo "Choose an organize method:"
-  echo "ftp - Apply changes based on filetype"
-  echo "* - Apply filename rules from config"
-  echo ""
-  read method
-
   if [ "$DRYMODE" = "true" ]; then
     echo "Dry Mode:"
   fi
-
   move
 }
 
-# Check for optional arguments
-case "$3" in
--d | --dry)
-  DRYMODE=true
-  ;;
--r | --rm)
-  KILLDUPLICATE=true
-  ;;
--h | --help)
-  help
-  exit 0
-  ;;
-esac
+while [[ "$1" != "" ]]; do
+  case "$1" in
+  -d | --dry)
+    DRYMODE=true
+    shift
+    ;;
+  -r | --rm)
+    KILLDUPLICATE=true
+    shift
+    ;;
+  -h | --help)
+    help
+    exit 0
+    ;;
+  *)
+    if [[ -z "$method" ]]; then
+      method="$1"
+    elif [[ -z "$src_directory" ]]; then
+      src_directory="$1"
+    elif [[ -z "$output_directory" ]]; then
+      output_directory="$1"
+    else
+      echo "Error: Unexpected argument '$1'"
+      help
+      exit 1
+    fi
+    shift
+    ;;
+  esac
+done
 
 # Check required arguments
-if [ -z "$src_directory" ] || [ -z "$output_directory" ]; then
-  echo "Error: Missing required arguments"
+if [[ -z "$method" || -z "$src_directory" || -z "$output_directory" ]]; then
+  echo "Error: Missing required arguments."
   help
   exit 1
 fi
