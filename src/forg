@@ -9,6 +9,18 @@ method=""
 src_directory=""
 output_directory=""
 
+RED="$(tput setaf 196)"
+GREEN="$(tput setaf 82)"
+BLUE="$(tput setaf 87)"
+ORANGE="$(tput setaf 166)"
+
+function text() {
+  local color=$1
+  local text=$2
+  local reset=$(tput sgr0)
+  echo -e "${color}${text}${reset}"
+}
+
 readonly config
 
 function help() {
@@ -54,16 +66,16 @@ move() {
     if [[ -e "$destination_dir/$filename" ]]; then
       if [ "$DRYMODE" = "true" ]; then
         if [ "$KILLDUPLICATE" = "true" ]; then
-          echo "Duplicate file: '$filename' removed"
+          text $GREEN "Duplicate file: '$filename' removed"
         else
-          echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
+          text $BLUE "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
         fi
       else
         if [ "$KILLDUPLICATE" = "true" ]; then
           rm "$file"
-          echo "Duplicate file: '$filename' removed"
+          text $RED "Duplicate file: '$filename' removed"
         else
-          echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
+          text $BLUE "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
         fi
       fi
       continue
@@ -71,12 +83,12 @@ move() {
 
     # Move the file
     if [ "$DRYMODE" = "true" ]; then
-      echo "Move file: $file ==> $destination_dir"
+      text $GREEN "Move file: $file ==> $destination_dir"
     else
       if mv -n "$file" "$destination_dir" 2>"$logs"; then
-        echo "Moved '$filename' to '$destination_dir'"
+        text $ORANGE "Moved '$filename' to '$destination_dir'"
       else
-        echo "Error moving '$filename' to '$destination_dir'.  Check '$logs' for details." >&2
+        text $BLUE "Error moving '$filename' to '$destination_dir'.  Check '$logs' for details." >&2
       fi
     fi
   done
@@ -85,7 +97,7 @@ move() {
 
 function main() {
   if [ "$DRYMODE" = "true" ]; then
-    echo "Dry Mode:"
+    text $GREEN "Dry Mode:"
   fi
   move
 }
@@ -135,26 +147,26 @@ fi
 
 # Same directory warning
 if [ "$src_directory" == "$output_directory" ]; then
-  echo "Be careful! You are running this script in the same directory!"
-  echo "If this directory is overpopulated, it may take longer"
-  select choice_continue in "Yes" "No"; do
+  text $RED "Be careful! you are running this script in the same directory!"
+  echo "if this directory is overpopulated, it may take longer"
+  select choice_continue in "yes" "no"; do
     case $choice_continue in
-    Yes) break ;;
-    No) exit 0 ;;
+    yes) break ;;
+    no) exit 0 ;;
     esac
   done
 fi
 
-# Check for config files and source them
+# check for config files and source them
 if [[ ! -f "$config" ]]; then
-  echo "Error: forg.conf not found.  Exiting." >&2
+  echo "error: forg.conf not found.  exiting." >&2
   exit 1
 else
   # shellcheck disable=SC1090
   source "$config"
   val=$?
   if [ "$val" -ne 0 ]; then
-    echo "Failed to source configuration files"
+    echo "failed to source configuration files"
     exit 1
   fi
 fi
