@@ -12,11 +12,11 @@ readonly config
 function help() {
   cat <<EOF
 File Organizer
-Usage: $0 [source-directory] [dest-directory] [options]
+Usage: $0 [source-directory] [dest-directory] [options] [method]
 Available Options:
-- -d, --dry                - Give a preview of the command
-- -r, --rm                 - Remove duplicate files
-- -h, --help               - Display this message and exits
+-d, --dry                - Give a preview of the command
+-r, --rm                 - Remove duplicate files
+-h, --help               - Display this message and exits
 EOF
 }
 
