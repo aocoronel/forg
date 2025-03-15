@@ -52,11 +52,19 @@ move() {
 
     # Check if the file already exists in the destination
     if [[ -e "$destination_dir/$filename" ]]; then
-      if [ "$KILLDUPLICATE" = "true" ]; then
-        rm "$file"
-        echo "Duplicate file: '$filename' removed"
+      if [ "$DRYMODE" = "true" ]; then
+        if [ "$KILLDUPLICATE" = "true" ]; then
+          echo "Duplicate file: '$filename' removed"
+        else
+          echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
+        fi
       else
-        echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
+        if [ "$KILLDUPLICATE" = "true" ]; then
+          rm "$file"
+          echo "Duplicate file: '$filename' removed"
+        else
+          echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
+        fi
       fi
       continue
     fi
@@ -89,6 +97,11 @@ while [[ "$1" != "" ]]; do
     shift
     ;;
   -r | --rm)
+    KILLDUPLICATE=true
+    shift
+    ;;
+  -dr | -rd)
+    DRYMODE=true
     KILLDUPLICATE=true
     shift
     ;;
