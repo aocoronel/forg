@@ -7,8 +7,7 @@ logs="$HOME/.cache/forg.logs"
 KILLDUPLICATE=false
 DRYMODE=false
 
-readonly config_ext
-readonly config_dir
+readonly config
 
 function help() {
   cat <<EOF
