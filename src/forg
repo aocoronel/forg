@@ -41,21 +41,23 @@ move() {
     extension="${filename##*.}"
     destination_subpath=""
 
-    case "$method" in
-    ftp)
-      destination_subpath="${ftp[$extension]}"
-      ;;
-    *)
-      map="${method}"
-      eval "destination_subpath=\${$map[\$file_tag]}"
-      ;;
-    esac
+    for method in "${methods[@]}"; do
+      case "$method" in
+      ftp)
+        destination_subpath="${ftp[$extension]}"
+        ;;
+      *)
+        map="${method}"
+        eval "destination_subpath=\${$map[\$file_tag]}"
+        ;;
+      esac
+    done
 
     # Ensure destination_dir is valid
     if [[ -n "$destination_subpath" ]]; then
       destination_dir="$output_directory/$destination_subpath"
     else
-      destination_dir="$output_directory/others"
+      continue
     fi
 
     if [ ! -d "$destination_dir" ]; then
@@ -122,16 +124,12 @@ while [[ "$1" != "" ]]; do
     exit 0
     ;;
   *)
-    if [[ -z "$method" ]]; then
-      method="$1"
-    elif [[ -z "$src_directory" ]]; then
+    if [[ -z "$src_directory" ]]; then
       src_directory="$1"
     elif [[ -z "$output_directory" ]]; then
       output_directory="$1"
     else
-      echo "Error: Unexpected argument '$1'"
-      help
-      exit 1
+      methods+=("$1")
     fi
     shift
     ;;
@@ -139,7 +137,7 @@ while [[ "$1" != "" ]]; do
 done
 
 # Check required arguments
-if [[ -z "$method" || -z "$src_directory" || -z "$output_directory" ]]; then
+if [[ ${#methods[@]} -eq 0 || -z "$src_directory" || -z "$output_directory" ]]; then
   echo "Error: Missing required arguments."
   help
   exit 1
