@@ -19,7 +19,7 @@ It's a CLI tool that tries to make the process of organizing your files much eas
 ## Usage
 
 ```
-Usage: $0 [options] <method> <source-directory> <dest-directory>
+Usage: $0 [options] <source-directory> <dest-directory> <method> ...
 Options:
   -d, --dry       Preview actions
   -r, --rm        Remove duplicate files
@@ -28,21 +28,29 @@ Options:
 
 ### Examples
 
-- Example 1
+- Example 1: Remove duplicates
 
 ```bash
-forg.sh -r ftp /home/user/Downloads /home/user/Files
+forg.sh -r /home/user/Downloads /home/user/Files ftp
 ```
 
 This will move all files from Downloads/ to Files/, organize them by filetype and remove any duplicates from the Downloads/ directory.
 
-- Example 2
+- Example 2: Preview
 
 ```bash
-forg.sh -d gallery /home/user/Downloads /home/user/Files
+forg.sh -d gallery /home/user/Downloads /home/user/Files ftp
 ```
 
 This will preview move for all files from Downloads/ to Files/ and organize them by the gallery rules.
+
+- Example 3: Multiple methods
+
+```bash
+forg.sh -dr docs /home/user/Downloads /home/user/Files ftp gallery docs
+```
+
+This will preview move for all files from Downloads/ to Files/, organize them by filetype, them by gallery rules, them by docs rules and deduplicate files.
 
 ## Configuration
 
