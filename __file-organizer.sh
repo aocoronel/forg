@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# Use `set -euo pipefail` to catch errors early and prevent unexpected behavior.
-# -e: Exit immediately if a command exits with a non-zero status.
-# -u: Treat unset variables as an error.
-# -o pipefail: If a command in a pipeline fails, the pipeline's exit status is that of the failing command.
-set -euo pipefail
-
 src_directory="$1"
 output_directory="$2"
 config_ext="$HOME/.local/share/organizer-extensions.conf"  # Sources filenames and extensions
@@ -38,20 +32,17 @@ function directory_check() {
 move() {
   find "$src_directory" -type f -print0 | while IFS= read -r -d $'\0' file; do
     filename=$(basename "$file")
+    file_tag="${filename%-*}"
     extension="${filename##*.}"
     destination_subpath=""
 
     case "$method" in
-    broad)
+    ftp)
       destination_subpath="${extension_map[$extension]}"
       ;;
-    gallery)
-      for pattern in "${!gallery_map[@]}"; do
-        if [[ "$filename" == $pattern ]]; then
-          destination_subpath="${gallery_map[$pattern]}"
-          break
-        fi
-      done
+    *)
+      map="${method}"
+      eval "destination_subpath=\${$map[\$file_tag]}"
       ;;
     esac
 
@@ -64,9 +55,11 @@ move() {
 
     # Check if the file already exists in the destination
     if [[ -e "$destination_dir/$filename" ]]; then
-      echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
       if [ "$KILLDUPLICATE" = "true" ]; then
-        rm "$src_directory/$filename"
+        rm "$file"
+        echo "Duplicate file: '$filename' removed"
+      else
+        echo "File '$filename' already exists in '$destination_dir'! Possible duplicate?"
       fi
       continue
     fi
@@ -75,7 +68,7 @@ move() {
     if [ "$DRYMODE" = "true" ]; then
       echo "Move file: $file ==> $destination_dir"
     else
-      if mv -n "$file" "$destination_dir" &>"$logs"; then
+      if mv -n "$file" "$destination_dir" 2>"$logs"; then
         echo "Moved '$filename' to '$destination_dir'"
       else
         echo "Error moving '$filename' to '$destination_dir'.  Check '$logs' for details." >&2
@@ -87,9 +80,8 @@ move() {
 
 function main() {
   echo "Choose an organize method:"
-  echo "broad - Apply changes based on filetype"
-  echo "gallery - Apply image rules"
-  echo "music - Apply music rules"
+  echo "ftp - Apply changes based on filetype"
+  echo "* - Apply filename rules from config"
   echo ""
   read method
 
