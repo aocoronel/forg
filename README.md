@@ -39,7 +39,7 @@ This will move all files from Downloads/ to Files/, organize them by filetype an
 - Example 2: Preview
 
 ```bash
-forg.sh -d gallery /home/user/Downloads /home/user/Files ftp
+forg.sh -d /home/user/Downloads /home/user/Files gallery
 ```
 
 This will preview move for all files from Downloads/ to Files/ and organize them by the gallery rules.
@@ -47,7 +47,7 @@ This will preview move for all files from Downloads/ to Files/ and organize them
 - Example 3: Multiple methods
 
 ```bash
-forg.sh -dr docs /home/user/Downloads /home/user/Files ftp gallery docs
+forg.sh -dr /home/user/Downloads /home/user/Files ftp gallery docs
 ```
 
 This will preview move for all files from Downloads/ to Files/, organize them by filetype, them by gallery rules, them by docs rules and deduplicate files.
