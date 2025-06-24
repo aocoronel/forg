@@ -72,10 +72,10 @@ When the method `gallery` is used, all files that start with any of those patter
 
 By default, only `ftp` reads the end of the files, looking for filetypes. All the other arrays will have their pattern to the beginning of the filename, for example: `wppr%-cat.png`. The **percentage symbol** declares the end of the pattern, in this case `wppr`.
 
-There is no hardcode in the script, so the array could be called anything and infinitely modifiable. The `%` symbol can be changed to something else, by changing this line in the code:
+There is no hardcode in the script, so the array could be called anything and infinitely modifiable. The `-` symbol can be changed to something else, by changing this line in the code:
 
 ```bash
-file_tag="${filename%%\%*}"
+file_tag="${filename%%\-*}"
 ```
 
 Directories are generated on demand. Only the required directories are created, but if you want to see or create all configured directories, you can use the `forg-config.sh`
