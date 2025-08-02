@@ -85,7 +85,7 @@ Directories are generated on demand. Only the required directories are created, 
 Make sure to add the $HOME/.local/bin/ to your `$PATH`, as the `install.sh` sends the script there.
 
 ```
-git clone https://github.com/janpstrunn/forg
+git clone https://github.com/anstrinn/forg
 cd forg
 sh install.sh
 ```
