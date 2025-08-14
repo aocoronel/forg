@@ -1,25 +1,25 @@
 <h1 align="center">Forg</h1>
 
-`forg.sh` is a file organizer written in shell, that allows to organize and move files based on filetype or any other rule, such as naming conventions.
+`forg` is a file organizer written in Shell, that allows to organize and move files based on filetype or any other rule, such as naming conventions.
 
 It's a CLI tool that tries to make the process of organizing your files much easier and configured to you own liking, is it a hierarchical structure or fully based on filetype.
 
 ## Requirements
 
-- shell (bash, zsh, fish)
+- Shell
 
 ## Features
 
+- Create the whole directory structure
 - Organize files by filetype
 - Organize files by naming conventions
 - Preview the process
 - Remove duplicate files
-- Create the whole directory structure
 
 ## Usage
 
 ```
-Usage: $0 [options] <source-directory> <dest-directory> <method> ...
+Usage: forg [OPTIONS] <SOURCE-DIRECTORY> <DEST-DIRECTORY> <METHOD> ...
 Options:
   -d, --dry       Preview actions
   -r, --rm        Remove duplicate files
@@ -28,29 +28,29 @@ Options:
 
 ### Examples
 
-- Example 1: Remove duplicates
+**Example 1:** Remove duplicates
 
 ```bash
 forg.sh -r /home/user/Downloads /home/user/Files ftp
 ```
 
-This will move all files from Downloads/ to Files/, organize them by filetype and remove any duplicates from the Downloads/ directory.
+This will move all files from `Downloads/` to `Files/`, organize them by filetype and remove any duplicates from the `Downloads/` directory.
 
-- Example 2: Preview
+**Example 2:** Preview
 
 ```bash
 forg.sh -d /home/user/Downloads /home/user/Files gallery
 ```
 
-This will preview move for all files from Downloads/ to Files/ and organize them by the gallery rules.
+This will preview move for all files from `Downloads/` to `Files/` and organize them by the gallery rules.
 
-- Example 3: Multiple methods
+**Example 3:** Multiple methods
 
 ```bash
 forg.sh -dr /home/user/Downloads /home/user/Files ftp gallery docs
 ```
 
-This will preview move for all files from Downloads/ to Files/, organize them by filetype, them by gallery rules, them by docs rules and deduplicate files.
+This will preview move for all files from `Downloads/` to `Files/`, organize them by filetype, them by gallery rules, them by docs rules and deduplicate files.
 
 ## Configuration
 
@@ -70,7 +70,7 @@ declare -A gallery=(
 
 When the method `gallery` is used, all files that start with any of those patterns are moved to the corresponding directory.
 
-By default, only `ftp` reads the end of the files, looking for filetypes. All the other arrays will have their pattern to the beginning of the filename, for example: `wppr%-cat.png`. The **percentage symbol** declares the end of the pattern, in this case `wppr`.
+By default, only `ftp` reads the end of the files, looking for filetypes. All the other arrays will have their pattern to the beginning of the filename, for example: `wppr-cat.png`. The **dash symbol** (-) declares the end of the pattern, in this case `wppr`.
 
 There is no hardcode in the script, so the array could be called anything and infinitely modifiable. The `-` symbol can be changed to something else, by changing this line in the code:
 
@@ -82,12 +82,12 @@ Directories are generated on demand. Only the required directories are created, 
 
 ## Installation
 
-Make sure to add the $HOME/.local/bin/ to your `$PATH`, as the `install.sh` sends the script there.
+Make sure to add the `$HOME/.local/bin/` to your `$PATH`, as the `install.sh` sends the script there.
 
 ```
 git clone https://github.com/aocoronel/forg
-cd forg
-sh install.sh
+chmod +x forg/src/forg
+sudo cp forg/src/forg /usr/local/bin/
 ```
 
 ## Notes
