@@ -52,7 +52,7 @@ bool VERBOSE = false;
 
 void usage(const char *prog) {
         printf("File Organizer\n");
-        printf("Usage: %s [options] <src> <dest>\n", prog);
+        printf("Usage: %s [options] <src> <dest> <mode>\n", prog);
         printf("Options:\n");
         printf("  -d, --dry       Preview actions\n");
         printf("  -r, --rm        Remove duplicate files\n");
@@ -291,7 +291,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (argc < 3) {
-                printf("Usage: forg [options] <src> <dest>\n");
+                printf("Usage: forg [options] <src> <dest> <mode>\n");
                 printf("Use -h option for more details.\n");
                 exit(EXIT_FAILURE);
         }
