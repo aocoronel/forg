@@ -1,29 +1,32 @@
-<h1 align="center">Forg</h1>
+# A simple file organizer
 
-`forg` is a file organizer written in Shell, that allows to organize and move files based on filetype or any other rule, such as naming conventions.
+`forg` is a file organizer, that allows to organize and move files based on filetype or any other rule, such as naming conventions.
 
 It's a CLI tool that tries to make the process of organizing your files much easier and configured to you own liking, is it a hierarchical structure or fully based on filetype.
 
 ## Requirements
 
-- Shell
+- `just` (optional)
+- `zig` (optional)
 
 ## Features
 
 - Create the whole directory structure
 - Organize files by filetype
-- Organize files by naming conventions
+- Organize files by naming conventions (tags)
 - Preview the process
 - Remove duplicate files
 
 ## Usage
 
 ```
-Usage: forg [OPTIONS] <SOURCE-DIRECTORY> <DEST-DIRECTORY> <METHOD> ...
+File Organizer
+Usage: forg [options] <src> <dest> <mode>
 Options:
   -d, --dry       Preview actions
   -r, --rm        Remove duplicate files
   -h, --help      Show this message
+  -V, --verbose   Enable verbosity
 ```
 
 ### Examples
@@ -31,7 +34,7 @@ Options:
 **Example 1:** Remove duplicates
 
 ```bash
-forg.sh -r /home/user/Downloads /home/user/Files ftp
+forg -r /home/user/Downloads /home/user/Files
 ```
 
 This will move all files from `Downloads/` to `Files/`, organize them by filetype and remove any duplicates from the `Downloads/` directory.
@@ -39,56 +42,42 @@ This will move all files from `Downloads/` to `Files/`, organize them by filetyp
 **Example 2:** Preview
 
 ```bash
-forg.sh -d /home/user/Downloads /home/user/Files gallery
+forg.sh -V /home/user/Downloads /home/user/Files
 ```
 
-This will preview move for all files from `Downloads/` to `Files/` and organize them by the gallery rules.
-
-**Example 3:** Multiple methods
-
-```bash
-forg.sh -dr /home/user/Downloads /home/user/Files ftp gallery docs
-```
-
-This will preview move for all files from `Downloads/` to `Files/`, organize them by filetype, them by gallery rules, them by docs rules and deduplicate files.
+This will preview move for all files from `Downloads/` to `Files/`.
 
 ## Configuration
 
-This script reads the `forg.conf` which contains arrays. There is a big array called `ftp` and two extra arrays to serve as a template. One of them looks like this:
+This script reads the `forg.conf` at `~/.local/share`, by default.
 
-```shell
-declare -A gallery=(
-  [wppr]=media/wallpapers/
-  [wallpaper]=media/wallpapers/
-  [wall]=media/wallpapers/
-  [screen]=media/screenshots/
-  [screenshot]=media/screenshots/
-  [scrsht]=media/screenshots/
-  [meme]=media/memes/
-)
+```conf
+# Tags
+tag:agreement=docs/legal/
+tag:backup=backups/
+tag:case=docs/legal/
+
+# Extensions
+ext:7z=archives/compressed/
+ext:aa=media/audiobooks/
+ext:aac=media/music/
 ```
 
-When the method `gallery` is used, all files that start with any of those patterns are moved to the corresponding directory.
-
-By default, only `ftp` reads the end of the files, looking for filetypes. All the other arrays will have their pattern to the beginning of the filename, for example: `wppr-cat.png`. The **dash symbol** (-) declares the end of the pattern, in this case `wppr`.
-
-There is no hardcode in the script, so the array could be called anything and infinitely modifiable. The `-` symbol can be changed to something else, by changing this line in the code:
-
-```bash
-file_tag="${filename%%\-*}"
-```
-
-Directories are generated on demand. Only the required directories are created, but if you want to see or create all configured directories, you can use the `forg-config.sh`
+By default, the auto mode is set where tags precede extensions. In this case, files starting with `agreement-myfile.docx` will be moved to `docs/legal/`. However, if the agreement tag was not set, and an extension is set it's going to be moved to the extension's configured path.
 
 ## Installation
 
 Make sure to add the `$HOME/.local/bin/` to your `$PATH`, as the `install.sh` sends the script there.
 
-```
+```bash
 git clone https://github.com/aocoronel/forg
-chmod +x forg/src/forg
-sudo cp forg/src/forg /usr/local/bin/
+cd forg; just release
+sudo cp zig-out/bin/forg /usr/local/bin/
 ```
+
+### Compiling
+
+You can either run `just release` or `zig build -Doptimize=ReleaseFast`.
 
 ## Notes
 
