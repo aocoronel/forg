@@ -79,6 +79,8 @@ sudo cp zig-out/bin/forg /usr/local/bin/
 
 You can either run `just release` or `zig build -Doptimize=ReleaseFast`.
 
+If you do not have `zig` installed, you can compile with `gcc` or `clang`: `gcc $(find src -iname "*.c") -o forg`
+
 ## Notes
 
 This script has been only tested in a Linux Machine.
