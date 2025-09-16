@@ -13,15 +13,17 @@ pub fn build(b: *std.Build) void {
     // Add C source files
     exe.addCSourceFiles(.{
         .files = &[_][]const u8{
-            "src/forg.c",
+            "forg.c",
             "src/validade.c",
-            "src/colors.c",
+            "vendor/printfc.c",
         },
         .flags = &[_][]const u8{ "-std=c99" },
     });
 
     // Add include path
     exe.addIncludePath(.{ .cwd_relative = "src/" });
+    exe.addIncludePath(.{ .cwd_relative = "vendor/" });
+    exe.addIncludePath(.{ .cwd_relative = "include/" });
 
     // Link libc
     exe.linkLibC();

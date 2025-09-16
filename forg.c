@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "colors.h"
+#include "vendor/printfc.h"
 #include <getopt.h>
 #include "validade.h"
 
@@ -125,7 +125,7 @@ void ensure_directory(const char *path) {
         char path_copy[MAX_PATH];
         size_t len = strlen(path);
         if (len >= sizeof(path_copy)) {
-                print_error("failed to prepare directory");
+                printfc(ERROR, "failed to prepare directory");
                 return;
         }
         strcpy(path_copy, path);
@@ -161,18 +161,26 @@ void move_file(const char *src_file, const char *dest_dir) {
         if (access(dest_path, F_OK) == 0) {
                 if (DRY_MODE) {
                         if (DEDUPLICATE_MODE) {
-                                printf("Would delete duplicate: %s", dest_dir);
+                                printf("Would delete duplicate: %s\n",
+                                       dest_path);
                         } else {
-                                print_verbose("File exists");
+                                printfc(INFO, "File exists: %s\n", dest_path);
                         }
                 } else {
                         if (DEDUPLICATE_MODE) {
                                 if (remove(src_file) == 0) {
-                                        print_verbose("Deleted duplicate");
+                                        if (VERBOSE) {
+                                                printfc(INFO,
+                                                        "Deleted duplicate: %s\n",
+                                                        dest_path);
+                                        }
                                 } else
                                         perror("Delete failed");
                         } else {
-                                if (VERBOSE) print_verbose("File exists");
+                                if (VERBOSE && isfile(dest_path)) {
+                                        printfc(INFO, "File exists: %s\n",
+                                                dest_dir);
+                                }
                         }
                         return;
                 }
@@ -188,8 +196,8 @@ void move_file(const char *src_file, const char *dest_dir) {
                                 operations++;
                         }
                 } else {
-                        print_error("failed to move: ");
-                        printf("%s to %s\n", src_file, dest_dir);
+                        printfc(ERROR, "failed to move: %s to %s\n", src_file,
+                                dest_dir);
                 }
         }
 }
@@ -259,7 +267,7 @@ int main(int argc, char *argv[]) {
         int opt;
 
         if (!config_path) {
-                print_fatal("Could not get HOME environment variable");
+                printfc(FATAL, "Could not get HOME environment variable");
                 exit(EXIT_FAILURE);
         }
 
@@ -328,16 +336,16 @@ int main(int argc, char *argv[]) {
         }
 
         if (!isdir(src_dir)) {
-                print_fatal("source directory is not a directory!");
+                printfc(FATAL, "source directory is not a directory!");
                 exit(EXIT_FAILURE);
         }
         if (!isdir(dest_dir)) {
-                print_fatal("destination directory is not a directory!");
+                printfc(FATAL, "destination directory is not a directory!");
                 exit(EXIT_FAILURE);
         }
 
         if (strcmp(src_dir, dest_dir) == 0) {
-                print_warning("source and destination are the same!\n");
+                printfc(WARN, "source and destination are the same!\n");
                 printf("%s", "This may cause issues or slow performance.\n");
                 printf("%s", "Continue? (y/n): ");
                 char choice = getchar();
