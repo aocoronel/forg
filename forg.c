@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         char config_file[MAX_PATH];
 
         if (!home_env) {
-                printfc(FATAL, "Could not get HOME environment variable");
+                printfc(FATAL, "Could not get HOME environment variable\n");
                 return EXIT_FAILURE;
         }
 
@@ -137,11 +137,11 @@ int main(int argc, char *argv[]) {
         }
 
         if (!isdir(src_dir)) {
-                printfc(FATAL, "source directory is not a directory!");
+                printfc(FATAL, "source directory is not a directory!\n");
                 return EXIT_FAILURE;
         }
         if (!isdir(dst_dir)) {
-                printfc(FATAL, "destination directory is not a directory!");
+                printfc(FATAL, "destination directory is not a directory!\n");
                 return EXIT_FAILURE;
         }
 
@@ -386,7 +386,7 @@ void walk_and_move(const char *src, const char *dest) {
                                         continue;
                                 case 2:
                                         printfc(ERROR,
-                                                "failed to make directory.");
+                                                "failed to make directory.\n");
                                         continue;
                                 }
                                 move_file(path, final_dir);
