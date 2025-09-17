@@ -32,11 +32,11 @@ enum ForgMode {
 };
 enum ForgMode forg_mode = AUTO; // Default is Auto
 
-static struct option long_options[] = { { "dry", no_argument, 0, 'd' },
-                                        { "rm", no_argument, 0, 'r' },
-                                        { "verbose", no_argument, 0, 'V' },
-                                        { "help", no_argument, 0, 'h' },
-                                        { 0, 0, 0, 0 } };
+static struct option long_options[] = {
+        { "dry", no_argument, 0, 'd' },     { "rm", no_argument, 0, 'r' },
+        { "verbose", no_argument, 0, 'V' }, { "debug", no_argument, 0, 'D' },
+        { "help", no_argument, 0, 'h' },    { 0, 0, 0, 0 }
+};
 
 typedef struct {
         char path[256]; // Destination. e.g docs/
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
         snprintf(config_file, sizeof(config_file), "%s/.local/share/forg.conf",
                  home_env);
 
-        while ((opt = getopt_long(argc, argv, ":drVh", long_options, NULL)) !=
+        while ((opt = getopt_long(argc, argv, ":dDrVh", long_options, NULL)) !=
                -1) {
                 switch (opt) {
                 case 'd':
@@ -86,6 +86,9 @@ int main(int argc, char *argv[]) {
                         break;
                 case 'V':
                         verbose = true;
+                        break;
+                case 'D':
+                        debug_mode = true;
                         break;
                 case 'h':
                         usage(argv[0]);
