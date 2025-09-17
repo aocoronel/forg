@@ -16,9 +16,10 @@
 #define MAX_RULES 1024
 
 // Extra Modes
-bool DRY_MODE = false;
-bool DEDUPLICATE_MODE = false;
-bool VERBOSE = false;
+bool dry_mode = false;
+bool deduplicate_mode = false;
+bool verbose = false;
+bool debug_mode = false;
 
 int tag_count = 0;
 int ext_count = 0;
@@ -78,13 +79,13 @@ int main(int argc, char *argv[]) {
                -1) {
                 switch (opt) {
                 case 'd':
-                        DRY_MODE = true;
+                        dry_mode = true;
                         break;
                 case 'r':
-                        DEDUPLICATE_MODE = true;
+                        deduplicate_mode = true;
                         break;
                 case 'V':
-                        VERBOSE = true;
+                        verbose = true;
                         break;
                 case 'h':
                         usage(argv[0]);
@@ -119,7 +120,7 @@ int main(int argc, char *argv[]) {
                 optind++;
         }
 
-        if (VERBOSE) {
+        if (verbose) {
                 char *tmp_mode = NULL;
                 switch (forg_mode) {
                 case AUTO:
@@ -159,7 +160,7 @@ int main(int argc, char *argv[]) {
                 return EXIT_FAILURE;
         }
 
-        if (DRY_MODE) {
+        if (dry_mode) {
                 printf("Dry run mode enabled.\n");
         };
 
@@ -220,8 +221,8 @@ int load_config(const char *filename) {
                 }
         }
 
-        if (VERBOSE)
-                printfc(INFO, "Loaded %d tags and %d extensions\n", tag_count,
+        if (debug_mode)
+                printfc(DEBUG, "Loaded %d tags and %d extensions\n", tag_count,
                         ext_count);
 
         fclose(fp);
@@ -280,17 +281,17 @@ void move_file(const char *src_file, const char *dst_dir) {
         snprintf(dest_path, sizeof(dest_path), "%s/%s", dst_dir, filename);
 
         if (access(dest_path, F_OK) == 0) {
-                if (DRY_MODE) {
-                        if (DEDUPLICATE_MODE) {
+                if (dry_mode) {
+                        if (deduplicate_mode) {
                                 printf("Would delete duplicate: %s\n",
                                        dest_path);
                         } else {
                                 printfc(INFO, "File exists: %s\n", dest_path);
                         }
                 } else {
-                        if (DEDUPLICATE_MODE) {
+                        if (deduplicate_mode) {
                                 if (remove(src_file) == 0) {
-                                        if (VERBOSE) {
+                                        if (verbose) {
                                                 printfc(WARN,
                                                         "Deleted duplicate: %s\n",
                                                         dest_path);
@@ -298,7 +299,7 @@ void move_file(const char *src_file, const char *dst_dir) {
                                 } else
                                         perror("Delete");
                         } else {
-                                if (VERBOSE && isfile(dest_path)) {
+                                if (verbose && isfile(dest_path)) {
                                         printfc(INFO, "File exists: %s\n",
                                                 dst_dir);
                                 }
@@ -307,11 +308,11 @@ void move_file(const char *src_file, const char *dst_dir) {
                 }
         }
 
-        if (DRY_MODE) {
+        if (dry_mode) {
                 printf("Would move: %s => %s\n", src_file, dst_dir);
         } else {
                 if (rename(src_file, dest_path) == 0) {
-                        if (VERBOSE) {
+                        if (verbose) {
                                 printf("Moved file: %s => %s\n", src_file,
                                        dst_dir);
                                 operations++;
