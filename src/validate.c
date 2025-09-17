@@ -1,7 +1,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "validade.h"
+#include "validate.h"
 
 int isfile(const char *path) {
         struct stat statbuf;
