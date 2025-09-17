@@ -14,7 +14,7 @@ pub fn build(b: *std.Build) void {
     exe.addCSourceFiles(.{
         .files = &[_][]const u8{
             "forg.c",
-            "src/validade.c",
+            "src/validate.c",
             "vendor/printfc.c",
         },
         .flags = &[_][]const u8{ "-std=c99" },
