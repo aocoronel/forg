@@ -118,7 +118,6 @@ void generate_zsh_completion(const CompletionInfo *info) {
                 printf("          _arguments \\\n");
                 printf("            '*:%s:_%s_get_%s' \\\n", cmdargs,
                        info->info->name, cmdargs);
-                printf("          return\n");
                 printf("          ;;\n");
         }
         for (int i = 0; i < pinfo->flagc; i++) {

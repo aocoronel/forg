@@ -10,6 +10,10 @@
 #include "vendor/printfc.h"
 #include <getopt.h>
 #include "validate.h"
+#include "bashgen.h"
+#include "zshgen.h"
+#include "autocomplete.h"
+#include "vendor/printh.h"
 
 #define MAX_PATH 4096
 #define MAX_LINE 1024
@@ -91,7 +95,7 @@ int main(int argc, char *argv[]) {
                         debug_mode = true;
                         break;
                 case 'h':
-                        usage(argv[0]);
+                        printh(program_info);
                         return EXIT_SUCCESS;
                 case ':':
                         printf("option '%c' needs a value\n", opt);
@@ -102,25 +106,41 @@ int main(int argc, char *argv[]) {
                 }
         }
 
-        if (argc < 3) {
-                printf("Usage: forg [options] <src> <dest> <mode>\n");
-                printf("Use -h option for more details.\n");
-                return EXIT_FAILURE;
+        if (optind < argc && strcmp(argv[optind], "autocomplete") == 0) {
+                optind++; // move to shell type
+                if (optind >= argc) {
+                        fprintf(stderr, "Usage: %s autocomplete bash | zsh\n",
+                                argv[0]);
+                        return EXIT_FAILURE;
+                }
+
+                const char *shell = argv[optind];
+                if (strcmp(shell, "bash") == 0) {
+                        generate_bash_completion(&completion_info);
+                        return EXIT_SUCCESS;
+                } else if (strcmp(shell, "zsh") == 0) {
+                        generate_zsh_completion(&completion_info);
+                        return EXIT_SUCCESS;
+                } else {
+                        fprintf(stderr, "Usage: %s autocomplete bash | zsh\n",
+                                argv[0]);
+                        return EXIT_FAILURE;
+                }
         }
 
         if (optind < argc) {
-                src_dir = argv[optind];
-                optind++;
+                src_dir = argv[optind++];
         }
         if (optind < argc) {
-                dst_dir = argv[optind];
-                optind++;
+                dst_dir = argv[optind++];
         }
         if (optind < argc) {
-                char *tmp_mode = argv[optind];
-                if (strcmp(tmp_mode, "tag") == 0) forg_mode = TAG;
-                if (strcmp(tmp_mode, "ext") == 0) forg_mode = EXT;
-                optind++;
+                char *tmp_mode = argv[optind++];
+                if (strcmp(tmp_mode, "tag") == 0) {
+                        forg_mode = TAG;
+                } else if (strcmp(tmp_mode, "ext") == 0) {
+                        forg_mode = EXT;
+                }
         }
 
         if (verbose) {
@@ -172,16 +192,6 @@ int main(int argc, char *argv[]) {
         printf("%d operations finished.", operations);
 
         return EXIT_SUCCESS;
-}
-
-void usage(const char *prog) {
-        printf("File Organizer\n");
-        printf("Usage: %s [options] <src> <dest> <mode>\n", prog);
-        printf("Options:\n");
-        printf("  -d, --dry       Preview actions\n");
-        printf("  -r, --rm        Remove duplicate files\n");
-        printf("  -h, --help      Show this message\n");
-        printf("  -V, --verbose   Enable verbosity\n");
 }
 
 void trim_newline(char *str) {

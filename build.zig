@@ -16,6 +16,9 @@ pub fn build(b: *std.Build) void {
             "forg.c",
             "src/validate.c",
             "vendor/printfc.c",
+            "vendor/printh.c",
+            "vendor/bashgen.c",
+            "vendor/zshgen.c",
         },
         .flags = &[_][]const u8{ "-std=c99" },
     });
