@@ -37,7 +37,7 @@ enum ForgMode {
 enum ForgMode forg_mode = AUTO; // Default is Auto
 
 static struct option long_options[] = {
-        { "dry", no_argument, 0, 'd' },     { "rm", no_argument, 0, 'r' },
+        { "dry", no_argument, 0, 'd' },     { "remove", no_argument, 0, 'r' },
         { "verbose", no_argument, 0, 'V' }, { "debug", no_argument, 0, 'D' },
         { "help", no_argument, 0, 'h' },    { 0, 0, 0, 0 }
 };
