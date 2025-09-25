@@ -6,8 +6,8 @@ It's a CLI tool that tries to make the process of organizing your files much eas
 
 ## Requirements
 
+- `cmake`
 - `just` (optional)
-- `zig` (optional)
 
 ## Features
 
@@ -67,17 +67,20 @@ By default, the auto mode is set where tags precede extensions. In this case, fi
 
 ## Installation
 
-Make sure to add the `$HOME/.local/bin/` to your `$PATH`, as the `install.sh` sends the script there.
-
 ```bash
 git clone https://github.com/aocoronel/forg
-cd forg; just release
-sudo cp zig-out/bin/forg /usr/local/bin/
+cd forg && just release
+cd build && sudo make install
 ```
 
 ### Compiling
 
-You can either run `just release` or `zig build -Doptimize=ReleaseFast`.
+You can either run `just build` or:
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release -B build .
+cmake --build build
+```
 
 ## Notes
 
