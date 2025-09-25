@@ -4,23 +4,24 @@ list:
 
 # Build (debug)
 build:
-  zig build
+  cmake -B build .
+  cmake --build build
 
 # Build (release)
 release:
-  zig build -Doptimize=ReleaseFast
+  cmake -DCMAKE_BUILD_TYPE=Release -B build .
+  cmake --build build
 
 # Clean files
 clean:
-  rm -rf .zig-cache/
-  rm -rf zig-out/
+  rm -rf build
 
 # Generate test sample to run forg << test-clean
 test: test-clean
-  cp -r test/ zig-out/bin/src
-  mkdir zig-out/bin/dst/
+  cp -r test/ test/tests
+  mkdir test/tests/dst/
 
 # Removes test sample
 test-clean:
-  rm -rf zig-out/bin/src/
-  rm -rf zig-out/bin/dst/
+  rm -rf test/tests/src/
+  rm -rf test/tests/dst/
