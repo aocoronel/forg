@@ -40,7 +40,6 @@ void printh_p(const char *msg, const char *style) {
 }
 
 int print_d(const char *desc) {
-        FILE *out = stdout;
         struct winsize w;
         ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
         int width = w.ws_col;

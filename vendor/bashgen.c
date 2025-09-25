@@ -94,8 +94,8 @@ void generate_bash_completion(const CompletionInfo *info) {
                         } else if (short_flag != NULL) {
                                 printf("  %s%c\n", short_flag, ')');
                         }
-                        printf("    mapfile -t COMPREPLY < <(compgen -W \"$\(_%s%c\" -- \"${cur}\"%c\n",
-                               info->info->flags[i].argument, ')', ')');
+                        printf("    mapfile -t COMPREPLY < <(compgen -W \"$%c_%s%c\" -- \"${cur}\"%c\n",
+                               '(', info->info->flags[i].argument, ')', ')');
                         printf("    return 0\n");
                         printf("    ;;\n");
                 } else {

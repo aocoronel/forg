@@ -27,13 +27,13 @@ ProgramInfo program_info = {
         .flags = flags,
 };
 
-struct ProgramEnv envs[] = {
-};
+// struct ProgramEnv envs[] = {
+// };
 
 CompletionInfo completion_info = {
         .info = &program_info,
         .argc = sizeof(args) / sizeof(args[0]),
-        .envc = sizeof(envs) / sizeof(envs[0]),
+        // .envc = sizeof(envs) / sizeof(envs[0]),
         .args = args,
-        .envs = envs,
+        // .envs = envs,
 };
