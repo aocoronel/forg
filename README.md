@@ -1,5 +1,8 @@
 # A simple file organizer
 
+> [!WARNING]
+> This repository has been moved to Codeberg. Find it at [aocoronel/forg](https://codeberg.org/aocoronel/forg).
+
 `forg` is a file organizer, that allows to organize and move files based on filetype or any other rule, such as naming conventions.
 
 It's a CLI tool that tries to make the process of organizing your files much easier and configured to you own liking, is it a hierarchical structure or fully based on filetype.
